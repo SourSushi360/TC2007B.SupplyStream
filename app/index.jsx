@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, ScrollView, Image } from 'react-native';
-import { Link } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { images } from '../constants';
@@ -42,11 +42,12 @@ export default function App() {
           />
           <CustomButton 
             title="Login"
-            handlePress={() => {}}
-            containerStyles="mt-7"
+            handlePress={() => router.push('/camera')}
+            containerStyles="mt-12 w-[150px]"
           />
         </View>
       </ScrollView>
+      <StatusBar style='dark' />
     </SafeAreaView>
   );
 }
