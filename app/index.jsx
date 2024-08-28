@@ -44,6 +44,7 @@ export default function App() {
             title="Login"
             handlePress={() => router.push('/camera')}
             containerStyles="mt-12 w-[150px]"
+            color='bg-gray'
           />
         </View>
       </ScrollView>
