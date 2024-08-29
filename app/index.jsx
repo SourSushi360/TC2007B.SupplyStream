@@ -20,8 +20,10 @@ export default function App() {
         <View className="w-full h-full justify-center items-center px-4">
           <Image 
             source={images.globe}
-            className="w-[168] h-[174]"
+            className="w-[234] h-[234]"
             resizeMode='contain'
+            marginBottom={-43}
+
           />
           <View className="relative mt-28">
             <Text className="text-4xl font-pbold text-center">SupplyStream</Text>
