@@ -19,16 +19,12 @@ const CameraView = () => {
     );
   }
 
-  function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
-  }
-
   return (
     <View className="flex-1">
       <ExpoCameraView className="flex-1" style={{ facing }}>
         <View className="flex-1 flex-row bg-transparent m-16">
-          <TouchableOpacity className="flex-1 self-end items-center" onPress={toggleCameraFacing}>
-            <Text className="text-2xl font-bold text-white">Flip Camera</Text>
+          <TouchableOpacity className="flex-1 self-end items-center">
+            <Text className="text-2xl font-bold text-white">Placeholder</Text>
           </TouchableOpacity>
         </View>
       </ExpoCameraView>

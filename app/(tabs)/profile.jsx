@@ -30,7 +30,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView>
-      <View className="items-center mt-8">
+      <View className="items-center mt-[80]">
         <Image 
           source={images.person}
           className="w-[232px] h-[232px] rounded-full"
