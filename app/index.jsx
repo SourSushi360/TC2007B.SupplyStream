@@ -34,6 +34,8 @@ export default function App() {
             handleChangeText={(e) => setForm({ ...form, email: e })}
             otherStyles="mt-7"
             keyboardType="email-address"
+            placeholder={"Enter your email"} // Añadido aquí
+
           />
           <FormField 
             title="Password"
@@ -41,6 +43,7 @@ export default function App() {
             handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
             keyboardType="password"
+            placeholder={"Enter your password"} 
           />
           <CustomButton 
             title="Login"
