@@ -1,7 +1,7 @@
 import { Text, View, Image, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useNavigation } from '@react-navigation/native' // Importa el hook de navegación
+import { useNavigation } from '@react-navigation/native'
 
 import { images } from '../../constants';
 import CustomButton from '../../components/CustomButton';
