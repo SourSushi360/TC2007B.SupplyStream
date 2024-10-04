@@ -13,10 +13,7 @@
     |   |   ├── scanned_code: "123456789012" | "987654321012" | "null"
     |   |   ├── image_url: "gs://your-bucket/images/donation_123.jpg" | "gs://your-bucket/images/donation_456.jpg" | "null"
     |   |   ├── timestamp: 1678901234567
-    |   |   ├── tags: ["rice", "grains"] | ["toothbrush", "hygiene"] | ["cereal", "breakfast"]
-    |   |   └── donor_info:
-    |   |       ├── name: "John Doe"
-    |   |       └── contact: "johndoe@email.com"
+    |   |   └── tags: ["rice", "grains"] | ["toothbrush", "hygiene"] | ["cereal", "breakfast"]
     |   ├── <donation_id>
     |   |   ├── ...
     |   └── <donation_id>

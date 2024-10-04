@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/constants/utils';
 import { View, Text, StyleSheet, Button, ToastAndroid, useWindowDimensions, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ReactNativeModal from 'react-native-modal';
+import ProductForm from '@/components/ProductForm';
 
 const BARCODE_SCANNING_AREA = 300;
 const BARCODE_SCANNING_TIMEOUT = 500;
@@ -18,6 +20,8 @@ export default function CameraView() {
   const [barcodeVisible, setBarcodeVisible] = useState(false);
   const barcodeTimeout = useRef<NodeJS.Timeout | null>(null);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const [formCode, setFormCode] = useState<string | null>(null);
 
   // Clear the timeout when the component is unmounted.
   useEffect(() => {
@@ -71,7 +75,26 @@ export default function CameraView() {
 
   const scannerBorder = barcodeScan === null ? "border-red-500" : "border-green-500";
 
-  return (
+  const handleCodeClick = () => {
+    if (barcodeScan) {
+      setFormCode(barcodeScan.data);
+    }
+  }
+
+  return <>
+    <ReactNativeModal
+      isVisible={formCode !== null}
+      onSwipeComplete={() => setFormCode(null)}
+      onBackButtonPress={() => setFormCode(null)}
+      swipeDirection={['down']}
+      className="relative flex-1 justify-end bg-white m-0 mt-[80%] rounded-t-3xl"
+      statusBarTranslucent
+    >
+      <Pressable onPress={() => setFormCode(null)} className="absolute top-2 right-2 p-2 bg-gray-200 rounded-full z-10">
+        <Ionicons size={24} name='close' color='black' />
+      </Pressable>
+      <ProductForm product={{ code: barcodeScan?.data }}/>
+    </ReactNativeModal>
     <ExpoCameraView className="flex-1" onBarcodeScanned={onBarcodeScanned} enableTorch={ flash }>
       <View className="relative flex-1 flex-col justify-center items-center">
         <View className="relative w-64 h-64 mt-20 border-white border-opacity-50">
@@ -81,9 +104,11 @@ export default function CameraView() {
           <View className={cn("absolute bottom-0 right-0 w-10 h-10 border-b-4 border-r-4 rounded-md", scannerBorder)} />
         </View>
         <View className="mt-16">
-          <Text className={cn("text-center text-xl px-4 py-2 rounded-xl", barcodeScan ? 'bg-green-600 text-white' : 'bg-white')}>
-            {(barcodeScan && barcodeVisible) ? barcodeScan.data : "Alínea un código con las guías... "}
-          </Text>
+          <Pressable onPress={handleCodeClick}>
+            <Text className={cn("text-center text-xl px-4 py-2 rounded-xl", barcodeScan ? 'bg-green-600 text-white' : 'bg-white')}>
+              {(barcodeScan && barcodeVisible) ? barcodeScan.data : "Alínea un código con las guías... "}
+            </Text>
+          </Pressable>
         </View>
         <Pressable
           className={cn("absolute bottom-5 right-5 w-16 h-16 rounded-full flex items-center justify-center", flash ? 'bg-yellow-400' : 'bg-white')}
@@ -93,5 +118,5 @@ export default function CameraView() {
         </Pressable>
       </View>
     </ExpoCameraView>
-  );
+  </>;
 };
