@@ -5,6 +5,9 @@ import { auth } from '@/constants/firebase';
 import { useRouter } from 'expo-router';
 
 import images from '@/constants/images';
+import MyButton from '@/components/UI/WhatsButton';
+
+
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -50,7 +53,10 @@ export default function SignInScreen() {
       />
       <Button title="Sign In" onPress={handleSignIn} disabled={!password || !email}/>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-    </View>
+      <View style={{marginTop: 20}}>
+        <MyButton/>
+      </View>
+       </View>
     </ScrollView>
 
   );
