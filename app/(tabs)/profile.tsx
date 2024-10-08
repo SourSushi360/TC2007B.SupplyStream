@@ -1,10 +1,9 @@
 import React from 'react';
-import { Text, View, Image, Alert, StyleSheet, Button } from 'react-native';
+import { Text, View, Image, Alert, StyleSheet, Button, ImageSourcePropType} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import images from '../../constants/images';
-import CustomButton from '../../components/CustomButton';
+import images from '../../constants/images'; // Ensure images.person is of type ImageSourcePropType
 import IconButton from '../../components/UI/IconButton';
 
 type RootStackParamList = {
@@ -37,7 +36,7 @@ const Profile: React.FC = () => {
     <SafeAreaView>
       <View style={{ alignItems: 'center', marginTop: 80 }}>
         <Image 
-          source={images.person}
+          source={images.person as ImageSourcePropType}
           style={{ width: 232, height: 232, borderRadius: 116 }}
         />
         <Text style={styles.TitleForName}>Fulanito de Tal</Text>

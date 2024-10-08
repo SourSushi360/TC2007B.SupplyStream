@@ -39,7 +39,7 @@ export default function AppLayout() {
       <Tabs.Screen name="profile" options={{
         title: 'Perfil',
         tabBarIcon: ({ color, focused }) => (
-          <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          <TabBarIcon name={focused ? 'person-circle' : 'person-circle-outline'} color={color} />
         )
       }}/>
 
@@ -47,6 +47,12 @@ export default function AppLayout() {
         title: 'Cámara',
         tabBarIcon: ({ color, focused }) => (
           <TabBarIcon name={focused ? 'camera' : 'camera-outline'} color={color} />
+        )
+      }}/>
+            <Tabs.Screen name="dataBase" options={{
+        title: 'Base de datos',
+        tabBarIcon: ({ color, focused }) => (
+          <TabBarIcon name={focused ? 'list-circle' : 'list-circle-outline'} color={color} />
         )
       }}/>
     </Tabs>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Image, ScrollView} from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Image, ScrollView, ImageSourcePropType } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/constants/firebase';
 import { useRouter } from 'expo-router';
@@ -29,10 +29,10 @@ export default function SignInScreen() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
     <View >
           <Image 
-            source={images.globe}
+            source={images.globe as ImageSourcePropType}
             className="w-[234] h-[234]"
             resizeMode='contain'
-            marginLeft={70}           
+            style={{ marginLeft: 70 }}           
           />
       <Text style={styles.titleSupply}>SupplyStream</Text>
       <Text style={styles.title}>Sign In</Text>
