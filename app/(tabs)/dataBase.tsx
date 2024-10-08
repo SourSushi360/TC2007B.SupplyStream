@@ -1,122 +1,93 @@
-import React from 'react';
-import { Text, View, Image, Alert, StyleSheet, Button, ImageSourcePropType } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import IconButton from '../../components/UI/IconButton';
 
-type DatabaseItemProps = {
-  name: string;
-  role: string;
-  image: ImageSourcePropType;
-  onDelete: () => void;
-  onEdit: () => void;
-};
+// Simulación de una base de datos
+const DATA = [
+  { id: '1', title: 'audifono' },
+  { id: '2', title: 'cesta' },
+  { id: '3', title: 'refri 4' },
+  { id: '4', title: 'gomas 2' },
+  { id: '5', title: 'camisa 5' },
+];
 
-const DatabaseItem: React.FC<DatabaseItemProps> = ({ name, role, image, onDelete, onEdit }) => {
-  return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Image 
-          source={image}
-          style={styles.image}
-        />
-        <Text style={styles.TitleForName}>{name}</Text>
-        <View style={styles.roleContainer}>
-          <Text style={styles.TitleForN}>Role: </Text>
-          <Text style={styles.TitleForN}>{role}</Text>
-        </View>
+const Item = ({ title, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+  </TouchableOpacity>
+);
 
-        <View style={styles.buttonContainer}>
-          <IconButton 
-            onPress={onDelete}
-            color="white"
-            name="trash-outline"
-            buttonColor="red"
-            size={24}
-          >
-            Delete
-          </IconButton>
+const ItemListScreen = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(DATA);
 
-          <IconButton 
-            onPress={onEdit}
-            size={24}
-            buttonColor="#4CAF50"
-            color="white"
-            name="create-outline"
-          >
-            Edit
-          </IconButton>
-        </View>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-export default function DatabaseView() {
-  const handleDelete = () => {
-    Alert.alert(
-      "Delete Record",
-      "Are you sure you want to delete this record?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        { text: "Delete", onPress: () => console.log("Record deleted") }
-      ],
-      { cancelable: false }
+  useEffect(() => {
+    const filtered = DATA.filter(item =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  };
 
-  const handleEdit = () => {
-    console.log("Edit record");
-  };
+    // Ordenar los datos filtrados alfabéticamente
+    const sortedData = filtered.sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
+
+    setFilteredData(sortedData);
+  }, [searchTerm]);
+
+  const renderItem = ({ item }) => (
+    <Item
+      title={item.title}
+      onPress={() => Alert.alert('Seleccionado', item.title)}
+    />
+  );
 
   return (
-    <SafeAreaView>
-      <DatabaseItem 
-        name="John Doe"
-        role="Admin"
-        image={{ uri: 'https://example.com/image.jpg' }}  // Replace with actual image source
-        onDelete={handleDelete}
-        onEdit={handleEdit}
+    <SafeAreaView style={styles.container}>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar..."
+        value={searchTerm}
+        onChangeText={setSearchTerm}
+      />
+      <FlatList
+        data={filteredData}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
       />
     </SafeAreaView>
   );
-}
+};
+
+export default ItemListScreen;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    marginTop: 80
+    flex: 1,
+    padding: 16,
   },
-  image: {
-    width: 232,
-    height: 232,
-    borderRadius: 116
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 16,
   },
-  roleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 3
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 8,
+    backgroundColor: '#f9c2ff',
   },
-  TitleForN: {
-    fontSize: 17,
-    marginTop: 10,
-    fontFamily: 'monospace',
-    fontWeight: 'bold'
+  title: {
+    fontSize: 16,
   },
-  TitleForName: {
-    fontSize: 30,
-    fontFamily: 'monospace',
-    fontWeight: 'bold',
-    marginTop: 50
-  },
-  buttonContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 40
-  }
 });
