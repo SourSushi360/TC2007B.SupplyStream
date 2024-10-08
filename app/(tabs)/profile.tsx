@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, Image, Alert, StyleSheet } from 'react-native';
+import { Text, View, Image, Alert, StyleSheet, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 import images from '../../constants/images';
 import CustomButton from '../../components/CustomButton';
+import IconButton from '../../components/UI/IconButton';
 
 type RootStackParamList = {
   index: undefined;
@@ -39,23 +40,34 @@ const Profile: React.FC = () => {
           source={images.person}
           style={{ width: 232, height: 232, borderRadius: 116 }}
         />
-        <Text style={{ marginTop: 7, fontSize: 30, fontFamily: 'PBold' }}>Fulanito de Tal</Text>
+        <Text style={styles.TitleForName}>Fulanito de Tal</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 3 }}>
-          <Text style={{ fontSize: 20, fontFamily: 'PSemiBold' }}>Rol:</Text>
-          <Text style={{ marginLeft: 2, fontSize: 20, fontFamily: 'PLight' }}>Administración</Text>
+          <Text style= {styles.TitleForN}>Rol: </Text>
+          <Text style={styles.TitleForN}>Administración</Text>
         </View>
-        <CustomButton 
-          title="Eliminar Cuenta"
-          handlePress={handleDeleteAccount}
-          containerStyles={{ marginTop: 12, width: 200 }}
-          color='bg-red'
-        />
-        <CustomButton 
-          title="Cerrar Sesión"
-          handlePress={handleLogout}
-          containerStyles={{ marginTop: 12, width: 200 }}
-          color='bg-red'
-        />
+        <View style={ styles.buttonContainer }>
+          <IconButton 
+            onPress={handleDeleteAccount}
+            color='white'
+            name='trash-outline'
+            buttonColor='red'
+            size={24}
+            marginTop={40}
+          > 
+          Eliminar Cuenta 
+          </IconButton>
+
+          <IconButton 
+            onPress={handleLogout}
+            size={24}
+            buttonColor='#4CAF50'
+            color='white'
+            name = 'log-out-outline'
+            marginTop={60}
+          >
+          Cerrar Sesión
+          </IconButton>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -63,20 +75,25 @@ const Profile: React.FC = () => {
 
 export default Profile;
 
-// export default function Tab() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Tab [Home|d]</Text>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
+const styles = StyleSheet.create({
+	buttonContainer: {
+    flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: 40
+	},
+	pressed: {
+		opacity: 0.6,
+	},
+  TitleForN: {
+    fontSize: 17,
+    marginTop: 10,
+    fontFamily: 'monospace',
+    fontWeight : 'bold'
+  },
+  TitleForName : {
+    fontSize: 30,
+    fontFamily: 'monospace',
+    fontWeight: 'bold',
+    marginTop: 50
+  }
+});
 
 
