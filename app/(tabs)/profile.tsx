@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function Tab() {
   return (
     <View style={styles.container}>
-      <Text>Tab [Home|Settings]</Text>
+      <Text>Tab [Home|d]</Text>
     </View>
   );
 }
@@ -15,3 +15,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+
