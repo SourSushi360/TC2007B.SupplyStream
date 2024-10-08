@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Image, ScrollView} from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/constants/firebase';
 import { useRouter } from 'expo-router';
+
+import images from '@/constants/images';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -21,7 +23,15 @@ export default function SignInScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View >
+          <Image 
+            source={images.globe}
+            className="w-[234] h-[234]"
+            resizeMode='contain'
+            marginLeft={70}           
+          />
+      <Text style={styles.titleSupply}>SupplyStream</Text>
       <Text style={styles.title}>Sign In</Text>
       <TextInput
         style={styles.input}
@@ -38,13 +48,20 @@ export default function SignInScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign In" onPress={handleSignIn} />
+      <Button title="Sign In" onPress={handleSignIn} disabled={!password || !email}/>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
+    </ScrollView>
+
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    padding: 20,
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -66,5 +83,14 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 10,
+  },
+  titleSupply: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+    marginBottom: 110,
+    textAlign: 'center',
+    color: '#0201ba',
+    marginTop:20,
   },
 });
