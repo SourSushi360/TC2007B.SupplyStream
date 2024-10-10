@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
 
 // SAMPLE LOGIN:
 // email: testuser1@example.com
@@ -7,6 +8,7 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAkg2lkqsEC5P8g0vvSF08FtbgTRmybna0",
+  databaseURL: "https://supplystream-tc2007b-default-rtdb.firebaseio.com/",
   authDomain: "supplystream-tc2007b.firebaseapp.com",
   projectId: "supplystream-tc2007b",
   storageBucket: "supplystream-tc2007b.appspot.com",
@@ -17,4 +19,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: false
+});
 export default app;

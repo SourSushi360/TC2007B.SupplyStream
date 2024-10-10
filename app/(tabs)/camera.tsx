@@ -93,7 +93,7 @@ export default function CameraView() {
       <Pressable onPress={() => setFormCode(null)} className="absolute top-2 right-2 p-2 bg-gray-200 rounded-full z-10">
         <Ionicons size={24} name='close' color='black' />
       </Pressable>
-      <ProductForm product={{ code: barcodeScan?.data }}/>
+      <ProductForm product={{ code: barcodeScan?.data }} onProductAdded={() => setFormCode(null)}/>
     </ReactNativeModal>
     <ExpoCameraView className="flex-1" onBarcodeScanned={onBarcodeScanned} enableTorch={ flash }>
       <View className="relative flex-1 flex-col justify-center items-center">
