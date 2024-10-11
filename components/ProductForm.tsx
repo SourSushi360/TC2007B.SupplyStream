@@ -3,6 +3,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { Pressable, TextInput, View, Text, ToastAndroid } from 'react-native';
 import { useSession } from './Session';
+import { cn } from '@/constants/utils';
 
 interface ProductEntry {
   name: string;
@@ -20,6 +21,7 @@ interface Donation {
 export default function ProductForm(props: { product: Partial<ProductEntry>, onProductAdded: () => void }) {
   const [product, setProduct] = useState<Partial<ProductEntry>>(props.product);
   const [error, setError] = useState('');
+  const [isUploading, setisUploading] = useState(false);
   const user = useSession();
 
     const handleSubmit = async () => {
@@ -28,12 +30,14 @@ export default function ProductForm(props: { product: Partial<ProductEntry>, onP
         return;
       }
 
+      setisUploading(true);
       const docRef = await addDoc(collection(db, 'donations'), {
         scannedBy: user.user?.uid,
         timestamp: new Date().toISOString(),
         debug: true,
-        contents: [product]
+        content: product
       });
+      setisUploading(false);
 
       ToastAndroid.show('Producto registrado.', 2000);
 
@@ -68,9 +72,11 @@ export default function ProductForm(props: { product: Partial<ProductEntry>, onP
     <Text className="text-center text-red-300">{error}</Text>
 
     <Pressable
-        className="px-4 py-2 bg-blue-500 mx-auto"
+        className={cn("px-4 py-2 mx-auto", isUploading ? "bg-gray-300" : "bg-blue-500")}
+        onPress={handleSubmit}
+        disabled={isUploading}
     >
-        <Text className="text-white" onPress={handleSubmit}>Registrar </Text>
+      <Text className="text-white" >{ isUploading ? "Registrando... " : "Registrar " }</Text>
     </Pressable>
   </View>
 }
