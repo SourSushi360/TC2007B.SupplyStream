@@ -62,7 +62,7 @@ const Profile: React.FC = () => {
           <IconButton
             onPress={handleLogout}
             size={24}
-            buttonColor='#4CAF50'
+            buttonColor='blue'
             color='white'
             name = 'log-out-outline'
             marginTop={60}
