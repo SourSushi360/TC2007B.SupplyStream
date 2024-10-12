@@ -1,10 +1,13 @@
 import { BarcodeScanningResult, CameraView as ExpoCameraView, useCameraPermissions } from 'expo-camera';
 import { useState, useEffect, useRef } from 'react';
+import { collection, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { cn } from '@/constants/utils';
 import { View, Text, StyleSheet, Button, ToastAndroid, useWindowDimensions, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ReactNativeModal from 'react-native-modal';
 import ProductForm from '@/components/ProductForm';
+import type { Donation } from '@/components/ProductForm';
+import { db } from '@/constants/firebase';
 
 const BARCODE_SCANNING_AREA = 300;
 const BARCODE_SCANNING_TIMEOUT = 500;
@@ -21,7 +24,9 @@ export default function CameraView() {
   const barcodeTimeout = useRef<NodeJS.Timeout | null>(null);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const [formCode, setFormCode] = useState<string | null>(null);
+  const [formLoading, setFormLoading] = useState(true);
+  const [initialForm, setInitialForm] = useState<Partial<Donation> | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   // Clear the timeout when the component is unmounted.
   useEffect(() => {
@@ -77,23 +82,34 @@ export default function CameraView() {
 
   const handleCodeClick = () => {
     if (barcodeScan) {
-      setFormCode(barcodeScan.data);
+      setFormLoading(true);
+      setShowForm(true);
+      const q = query(collection(db, "donations"), where("code", "==", barcodeScan.data));
+      getDocs(q).then(result => {
+        if (result.size > 0) {
+          setInitialForm(result.docs[0].data() as Donation);
+        } else {
+          console.log(barcodeScan.data);
+          setInitialForm({ code: barcodeScan.data });
+        }
+        setFormLoading(false);
+      });
     }
   }
 
   return <>
     <ReactNativeModal
-      isVisible={formCode !== null}
-      onSwipeComplete={() => setFormCode(null)}
-      onBackButtonPress={() => setFormCode(null)}
+      isVisible={showForm}
+      onSwipeComplete={() => setShowForm(false)}
+      onBackButtonPress={() => setShowForm(false)}
       swipeDirection={['down']}
       className="relative flex-1 justify-end bg-white m-0 mt-[80%] rounded-t-3xl"
       statusBarTranslucent
     >
-      <Pressable onPress={() => setFormCode(null)} className="absolute top-2 right-2 p-2 bg-gray-200 rounded-full z-10">
+      <Pressable onPress={() => setShowForm(false)} className="absolute top-2 right-2 p-2 bg-gray-200 rounded-full z-10">
         <Ionicons size={24} name='close' color='black' />
       </Pressable>
-      <ProductForm product={{ code: barcodeScan?.data }} onProductAdded={() => setFormCode(null)}/>
+      <ProductForm product={initialForm ?? {}} onProductAdded={() => setShowForm(false)} loading={formLoading} />
     </ReactNativeModal>
     <ExpoCameraView className="flex-1" onBarcodeScanned={onBarcodeScanned} enableTorch={ flash }>
       <View className="relative flex-1 flex-col justify-center items-center">
