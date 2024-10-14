@@ -1,6 +1,6 @@
 import { db } from '@/constants/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,17 +9,10 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-// Simulación de una base de datos
-const DATA = [
-  { id: '1', title: 'audifono' },
-  { id: '2', title: 'cesta' },
-  { id: '3', title: 'refri 4' },
-  { id: '4', title: 'gomas 2' },
-  { id: '5', title: 'camisa 5' },
-];
 
 interface InventoryItem {
   id: string;
@@ -28,52 +21,72 @@ interface InventoryItem {
   location: string;
 }
 
-const ItemListScreen = () => {
+export default function ItemListSearch() {
   const [query, setQuery] = useState('');
   const [data, setData] = useState<InventoryItem[] | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
+  // ni idea si useCallback es necesario, pero estaba en el ejemplo de RefreshControl
+  const onRefresh = useCallback(async () => {
+    setData(null);
+    const snapshot = await getDocs(collection(db, 'inventory'));
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    // @ts-ignore
+    setData(data);
+  }, []);
+
+  // ?. significa "si existe, ejecuta lo siguiente"
+  // ?? significa "si es null, usa lo siguiente"
+  // en este caso, si data es null, filteredData es []
   const filteredData = data
     ?.filter(item => item.name.toLowerCase().includes(query.toLowerCase()))
     ?.sort((a, b) => a.name.localeCompare(b.name)) ?? [];
 
   useEffect(() => {
-    getDocs(collection(db, 'inventory'))
-      .then(snapshot => {
-        const data = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        // @ts-ignore
-        setData(data);
-      })
+    onRefresh()
   }, []);
 
-  if (data === null) {
-    return <Text>Cargando...</Text>;
+  const Item = ({ item }: {item: InventoryItem}) => {
+    const selected = item.id === selectedItemId;
+    return <Pressable
+      onPress={() => setSelectedItemId(selected ? null : item.id)}
+      style={styles.item}
+    >
+      <Text style={styles.title}>{item.name}</Text>
+      { selected &&
+        <>
+          <Text>Cantidad: {item.quantity}</Text>
+          <Text>Ubicación: {item.location}</Text>
+        </>
+      }
+    </Pressable>
   }
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Buscar..."
-        value={query}
-        onChangeText={setQuery}
-      />
+  return <SafeAreaView style={styles.container}>
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Buscar..."
+      value={query}
+      onChangeText={setQuery}
+    />
+    { data === null ? <Text>Cargando... </Text> :
       <FlatList
         data={filteredData}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() => Alert.alert('Seleccionado', item.name)}
-            style={styles.item}
-          >
-            <Text style={styles.title}>{item.name}</Text>
-          </Pressable>
-        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={data === null}
+            onRefresh={onRefresh}
+          />
+        }
+        // item item item item
+        renderItem={item => <Item item={item.item} />}
         keyExtractor={item => item.id}
       />
-    </SafeAreaView>
-  );
+    }
+  </SafeAreaView>
 };
 
 const styles = StyleSheet.create({

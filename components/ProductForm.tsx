@@ -14,7 +14,7 @@ export interface Donation {
   location: string;
 }
 
-export default function ProductForm(props: { product: Partial<Donation>, onProductAdded: () => void, loading: boolean }) {
+export default function ProductForm(props: { product: Partial<Donation>, onProductAdded: () => void, loading: boolean, prefilled: boolean }) {
   const [product, setProduct] = useState<Partial<Donation>>(props.product);
   const [error, setError] = useState('');
   const [isUploading, setisUploading] = useState(false);
@@ -41,12 +41,13 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
         quantity: parseInt(product.quantity)
       });
       if (product.code) {
+        console.log('asfasf');
         await setDoc(doc(db, 'inventory', product.code), {
           name: product.name,
           code: product.code,
           location: product.location,
-          quantity: increment(parseInt(product.quantity))
-        });
+          quantity: increment(1)
+        }, { merge: true });
       }
     } catch (e) {
       console.error(e);
@@ -63,10 +64,12 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
   };
 
   return <View className="relative flex-1 px-4 py-10">
+    <Text className="text-2xl text-center mb-4">{ props.loading ? "Cargando" : props.prefilled ? "Añadir inventario" : "Registrar nuevo" }</Text>
+
     <TextInput
       placeholder="Nombre"
       value={product.name}
-      editable={!isUploading && !props.loading}
+      editable={!isUploading && !props.loading && !props.prefilled}
       onChangeText={name => setProduct({ ...product, name })}
     />
     <TextInput
@@ -84,7 +87,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
     <TextInput
       placeholder="Ubicación"
       value={product.location}
-      editable={!isUploading && !props.loading}
+      editable={!isUploading && !props.loading && !props.prefilled}
       onChangeText={location => setProduct({ ...product, location })}
     />
 

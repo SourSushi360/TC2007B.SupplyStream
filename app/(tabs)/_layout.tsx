@@ -49,7 +49,8 @@ export default function AppLayout() {
           <TabBarIcon name={focused ? 'camera' : 'camera-outline'} color={color} />
         )
       }}/>
-        <Tabs.Screen name="search" options={{
+
+      <Tabs.Screen name="search" options={{
         title: 'Base de datos',
         tabBarIcon: ({ color, focused }) => (
           <TabBarIcon name={focused ? 'list-circle' : 'list-circle-outline'} color={color} />
