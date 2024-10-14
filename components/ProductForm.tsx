@@ -66,26 +66,30 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
   return <View className="relative flex-1 px-4 py-10">
     <Text className="text-2xl text-center mb-4">{ props.loading ? "Cargando" : props.prefilled ? "Añadir inventario" : "Registrar nuevo" }</Text>
 
-    <TextInput
+    <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
       placeholder="Nombre"
+      placeholderTextColor="gray"
       value={product.name}
       editable={!isUploading && !props.loading && !props.prefilled}
       onChangeText={name => setProduct({ ...product, name })}
     />
-    <TextInput
+    <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
       placeholder="Code"
+      placeholderTextColor="gray"
       value={product.code}
       editable={false}
     />
-    <TextInput
+    <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
       placeholder="Cantidad"
+      placeholderTextColor="gray"
       value={product.quantity}
       keyboardType="numeric"
       editable={!isUploading && !props.loading}
       onChangeText={quantity => setProduct({ ...product, quantity })}
     />
-    <TextInput
+    <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
       placeholder="Ubicación"
+      placeholderTextColor="gray"
       value={product.location}
       editable={!isUploading && !props.loading && !props.prefilled}
       onChangeText={location => setProduct({ ...product, location })}
