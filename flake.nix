@@ -22,6 +22,7 @@
           packages = with pkgs; [
             nodejs-slim_22
             pnpm
+            android-tools
           ];
         };
       }

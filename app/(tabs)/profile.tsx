@@ -56,7 +56,7 @@ const Profile: React.FC = () => {
             size={24}
             marginTop={40}
           >
-          Eliminar Cuenta
+            Eliminar Cuenta
           </IconButton>
 
           <IconButton
@@ -67,7 +67,7 @@ const Profile: React.FC = () => {
             name = 'log-out-outline'
             marginTop={60}
           >
-          Cerrar Sesión
+            Cerrar Sesión
           </IconButton>
         </View>
       </View>
