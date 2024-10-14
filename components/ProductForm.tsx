@@ -1,5 +1,5 @@
 import { db } from '@/constants/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { FieldValue, addDoc, collection, doc, getDoc, increment, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Pressable, TextInput, View, Text, ToastAndroid } from 'react-native';
 import { useSession } from './Session';
@@ -20,6 +20,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
   const [isUploading, setisUploading] = useState(false);
   const user = useSession();
 
+  // Esto refresca los valores del form si cambia el dato de las props (autocompletado)
   useEffect(() => {
     setProduct(props.product);
   }, [props.product])
@@ -31,20 +32,34 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
     }
 
     setisUploading(true);
-    const docRef = await addDoc(collection(db, 'donations'), {
-      ...product,
-      scannedBy: user.user?.uid,
-      timestamp: new Date().toISOString(),
-      debug: true,
-      quantity: parseInt(product.quantity)
-    });
+    try {
+      const donRef = await addDoc(collection(db, 'donations'), {
+        ...product,
+        scannedBy: user.user?.uid,
+        timestamp: new Date().toISOString(),
+        debug: true,
+        quantity: parseInt(product.quantity)
+      });
+      if (product.code) {
+        await setDoc(doc(db, 'inventory', product.code), {
+          name: product.name,
+          code: product.code,
+          location: product.location,
+          quantity: increment(parseInt(product.quantity))
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      setError('Hubo un error al registrar el producto');
+      setisUploading(false);
+      return;
+    }
+
     setisUploading(false);
 
     ToastAndroid.show('Producto registrado.', 2000);
 
     props.onProductAdded();
-
-    console.log('Document written with ID: ', docRef.id);
   };
 
   return <View className="relative flex-1 px-4 py-10">
