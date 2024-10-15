@@ -32,6 +32,7 @@ export default function CameraView() {
   const [formLoading, setFormLoading] = useState(true);
   const [initialForm, setInitialForm] = useState<Partial<Donation> | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [picture, setPicture] = useState<string | null>(null);
 
   const cameraRef = useRef<ExpoCameraView>(null);
 
@@ -111,11 +112,11 @@ export default function CameraView() {
       Alert.alert(
         'Instrucciones',
         `En caso de ser posible, se recomienda escanear por código de barras.
-  Si no es posible, sigua las indicaciones para tomar una foto:
-  1. Coloque el producto en un lugar bien iluminado, con fondo claro y sin obstrucciones.
-  2. Asegúrese de que la cámara esté enfocada en el producto.
-  3. Asegúrese que todo el producto esté visible.
-  4. Ignore la guía roja, sólo aplica para escaneo de códigos.
+Si no es posible, sigua las indicaciones para tomar una foto:
+1. Coloque el producto en un lugar bien iluminado, con fondo claro y sin obstrucciones.
+2. Asegúrese de que la cámara esté enfocada en el producto.
+3. Asegúrese que todo el producto esté visible.
+4. Ignore la guía roja, sólo aplica para escaneo de códigos.
   `,
         [
           {
@@ -157,6 +158,10 @@ export default function CameraView() {
       }
     ], { base64: true, compress: 0.5 })
 
+    setInitialForm(null);
+    setFormLoading(false);
+    setShowForm(true);
+    setPicture(cropped.base64 ?? null);
   }
 
   return <>
@@ -176,6 +181,8 @@ export default function CameraView() {
         onProductAdded={() => setShowForm(false)}
         loading={formLoading}
         prefilled={initialForm?.location !== undefined}
+        code={barcodeScan?.data !== undefined}
+        picture={picture ?? undefined}
       />
     </ReactNativeModal>
 

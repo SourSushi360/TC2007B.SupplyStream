@@ -1,9 +1,10 @@
 import { db } from '@/constants/firebase';
-import { FieldValue, addDoc, collection, doc, getDoc, increment, setDoc } from 'firebase/firestore';
+import { FieldValue, addDoc, collection, doc, getDoc, getDocs, increment, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Pressable, TextInput, View, Text, ToastAndroid } from 'react-native';
 import { useSession } from './Session';
 import { cn } from '@/constants/utils';
+import { Ionicons } from '@expo/vector-icons';
 
 export interface Donation {
   scannedBy: string;
@@ -12,9 +13,10 @@ export interface Donation {
   code: string;
   quantity: string;
   location: string;
+  identifier?: string;
 }
 
-export default function ProductForm(props: { product: Partial<Donation>, onProductAdded: () => void, loading: boolean, prefilled: boolean }) {
+export default function ProductForm(props: { product: Partial<Donation>, onProductAdded: () => void, loading: boolean, prefilled: boolean, code: boolean, picture?: string }) {
   const [product, setProduct] = useState<Partial<Donation>>(props.product);
   const [error, setError] = useState('');
   const [isUploading, setisUploading] = useState(false);
@@ -23,7 +25,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
   // Esto refresca los valores del form si cambia el dato de las props (autocompletado)
   useEffect(() => {
     setProduct(props.product);
-  }, [props.product])
+  }, [props.product]);
 
   const handleSubmit = async () => {
     if (!product.name || !product.quantity || !product.location) {
@@ -41,13 +43,19 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
         quantity: parseInt(product.quantity)
       });
       if (product.code) {
-        console.log('asfasf');
         await setDoc(doc(db, 'inventory', product.code), {
           name: product.name,
           code: product.code,
           location: product.location,
           quantity: increment(1)
         }, { merge: true });
+      } else {
+        await addDoc(collection(db, 'inventory'), {
+          name: product.name,
+          location: product.location,
+          quantity: parseInt(product.quantity),
+          identifier: product.identifier,
+        })
       }
     } catch (e) {
       console.error(e);
@@ -63,6 +71,47 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
     props.onProductAdded();
   };
 
+  const pictureVITMatch = async () => {
+    if (!user.secrets) {
+      console.error('No hay secretos');
+      return;
+    };
+    const snapshot = await getDocs(collection(db, 'inventory'));
+    const identifiers = snapshot.docs.map(doc => doc.data().identifier).filter(item => item !== undefined);
+
+    console.log("querying with identifiers ", identifiers);
+
+    const response = await fetch('https://api-inference.huggingface.co/models/openai/clip-vit-base-patch32', {
+      headers: {
+        'Authorization': `Bearer ${user.secrets.huggingfaceApiKey}`
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        parameters: {
+          candidate_labels: identifiers,
+        },
+        inputs: props.picture
+      })
+    });
+
+    if (!response.ok) {
+      console.error(response);
+      setError('Hubo un error al procesar la imagen');
+      return;
+    }
+
+    const data = await response.json();
+    // sample: [{"score":0.9999638795852661,"label":"toilet paper"},{"score":2.269870128657203e-05,"label":"leather wallet"},{"score":1.343264193565119e-05,"label":"pen"}]
+    const bestMatch = data[0];
+    const matchedProduct = snapshot.docs.find(doc => doc.data().identifier === bestMatch.label);
+    if (matchedProduct) {
+      setProduct({
+        ...matchedProduct.data(),
+        code: matchedProduct.id,
+      });
+    }
+  };
+
   return <View className="relative flex-1 px-4 py-10">
     <Text className="text-2xl text-center mb-4">{ props.loading ? "Cargando" : props.prefilled ? "Añadir inventario" : "Registrar nuevo" }</Text>
 
@@ -76,7 +125,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
     <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
       placeholder="Code"
       placeholderTextColor="gray"
-      value={product.code}
+      value={product.code ?? '[sin código]'}
       editable={false}
     />
     <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
@@ -94,8 +143,24 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
       editable={!isUploading && !props.loading && !props.prefilled}
       onChangeText={location => setProduct({ ...product, location })}
     />
+    { !props.product.code &&
+      <TextInput className='bg-white font-bold mb-4 text-black px-4 py-2 rounded-md border border-gray-300 shadow-sm'
+        placeholder="Identificador (inglés)"
+        placeholderTextColor="gray"
+        value={product.identifier}
+        editable={!isUploading && !props.loading && !props.prefilled}
+        onChangeText={identifier => setProduct({ ...product, identifier })}
+      />
+    }
 
     <Text className="text-center text-red-300">{error}</Text>
+
+    <Pressable
+      className={cn("px-4 py-2 mx-auto", isUploading || props.loading ? "bg-gray-300" : "bg-blue-500")}
+      onPress={pictureVITMatch}
+    >
+      <Text className="text-white" >{ "Autodetectar (experimental) " }</Text>
+    </Pressable>
 
     <Pressable
         className={cn("px-4 py-2 mx-auto", isUploading || props.loading ? "bg-gray-300" : "bg-blue-500")}
