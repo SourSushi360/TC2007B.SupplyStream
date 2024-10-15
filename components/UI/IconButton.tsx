@@ -10,21 +10,29 @@ interface IconButtonProps {
   children?: React.ReactNode;
   buttonColor?: string;
   marginTop?: number;
+  disableded?: boolean;
+  colorText?: string;
+  letterSize?: number;
+  flexDirections?: string;
 }
 
-export default function IconButton({ onPress, name, size, color, children, buttonColor, marginTop }: IconButtonProps) {
+export default function IconButton({ onPress, name, size, color, children, buttonColor, marginTop, disableded, colorText, letterSize ,flexDirections }: IconButtonProps) {
+
+
+
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }: { pressed: boolean }): StyleProp<ViewStyle> => [
         styles.buttonContainer,
-        { backgroundColor: buttonColor, marginTop: marginTop || 20 },
-        pressed && styles.pressed,
+        { backgroundColor: buttonColor, marginTop: marginTop || 20 , flexDirection: flexDirections || 'row'},
+        pressed && styles.pressed, 
       ]}
+      disabled={disableded}
     >
 
       <Ionicons name={name} size={size} color={color} />
-      <Text style = {styles.ButtonTextStyle}>{children}</Text>
+      <Text style = {[styles.ButtonTextStyle, {color: colorText || 'white', fontSize: letterSize || 20}]}>{children}</Text>
       
     </Pressable>
   );
@@ -32,7 +40,6 @@ export default function IconButton({ onPress, name, size, color, children, butto
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
@@ -52,7 +59,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'monospace',
     fontWeight : 'bold',
-    marginLeft: 10
+    marginLeft: 10,
+    color: 'white',
   },
   background: {
 		flex: 1,
@@ -60,6 +68,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+  colorWhiteLetters: {
+    color: 'white'
+  }
 });
 
 {/* style={styles.background} */}
