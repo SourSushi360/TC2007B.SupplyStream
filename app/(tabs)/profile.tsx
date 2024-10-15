@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
           <Text style={styles.TitleForN}>Administración</Text>
         </View>
         <View style={ styles.buttonContainer }>
-          <IconButton
+          {/* <IconButton
             onPress={handleDeleteAccount}
             color='white'
             name='trash-outline'
@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
             marginTop={40}
           >
             Eliminar Cuenta
-          </IconButton>
+          </IconButton> */}
 
           <IconButton
             onPress={handleLogout}

@@ -246,7 +246,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
       <Text className="text-white" >{ "Autodetectar (experimental) " }</Text>
     </Pressable> */}
 
-    
+{ !props.product.code &&
     <IconButton
       onPress={pictureVITMatch}
       size={24}
@@ -256,6 +256,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
       letterSize = {18}
       disableded={isUploading || props.loading}
     >{" Autodetectar \n(experimental)"}</IconButton>
+}
 {/* 
     <Pressable
         className={cn("px-4 py-2 mx-auto", isUploading || props.loading ? "bg-gray-300" : "bg-blue-500")}
@@ -271,8 +272,9 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
       buttonColor='green'
       color='white'
       name = 'checkmark'
-      letterSize = {14}
-      flexDirections='column'
+      letterSize={props.product.code ? 24 : 14}
+      flexDirections={props.product.code ? 'row' : 'column'}
+      flexSize={1}
       disableded={isUploading || props.loading}
     >{ props.loading ? "Cargando... " : isUploading ? "Registrando... " : "Registrar " }</IconButton>
 

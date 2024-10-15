@@ -14,9 +14,10 @@ interface IconButtonProps {
   colorText?: string;
   letterSize?: number;
   flexDirections?: string;
+  flexSize?: number;
 }
 
-export default function IconButton({ onPress, name, size, color, children, buttonColor, marginTop, disableded, colorText, letterSize ,flexDirections }: IconButtonProps) {
+export default function IconButton({ onPress, name, size, color, children, buttonColor, marginTop, disableded, colorText, letterSize ,flexDirections, flexSize }: IconButtonProps) {
 
 
 
@@ -25,7 +26,7 @@ export default function IconButton({ onPress, name, size, color, children, butto
       onPress={onPress}
       style={({ pressed }: { pressed: boolean }): StyleProp<ViewStyle> => [
         styles.buttonContainer,
-        { backgroundColor: buttonColor, marginTop: marginTop || 20 , flexDirection: flexDirections || 'row'},
+        { backgroundColor: buttonColor, marginTop: marginTop || 20 , flexDirection: flexDirections || 'row', flex: flexSize || null},
         pressed && styles.pressed, 
       ]}
       disabled={disableded}
