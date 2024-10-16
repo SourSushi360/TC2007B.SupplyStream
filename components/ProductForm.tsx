@@ -268,7 +268,7 @@ export default function ProductForm(props: { product: Partial<Donation>, onProdu
 
     <IconButton
       onPress={handleSubmit}
-      size={24}
+      size={props.product.code ? 36 : 24}
       buttonColor='green'
       color='white'
       name = 'checkmark'

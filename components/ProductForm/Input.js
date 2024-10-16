@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
 		color: "black",
 	},
 	inputMultiline: {
-		minHeight: 100,
 		textAlignVertical: "top",
 	},
 });
