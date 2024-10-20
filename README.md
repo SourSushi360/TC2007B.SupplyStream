@@ -57,3 +57,37 @@ To get a local copy up and running follow these steps:
    ```bash
    npm install
    ```
+
+   Run the application: After everything is set up, you can start the project using Expo:
+
+   ```bash
+   expo start
+   ```
+
+   Open the app on your device:
+
+   Use the Expo Go app available on the iOS App Store or Google Play Store to scan the QR code displayed in your terminal or browser.
+   Alternatively, you can run the app in an Android or iOS emulator if you have them set up.
+
+## Usage
+
+Once the application is running, you can use the following features:
+
+Add Items: Take a picture of an item to recognize it and save it to the database automatically.
+Barcode/QR Code Scanning: Use your device's camera to scan barcodes or QR codes for easy item entry.
+View Items: Browse through the list of saved items stored in the Firebase database.
+
+Contributing
+Contributions are welcome! Please follow these steps:
+
+Fork the project.
+Create your feature branch (git checkout -b feature/AmazingFeature).
+Commit your changes (git commit -m 'Add some AmazingFeature').
+Push to the branch (git push origin feature/AmazingFeature).
+Open a Pull Request.
+License
+Distributed under the MIT License. See LICENSE for more information.
+
+Acknowledgments
+Expo for the framework.
+Firebase for backend services.
