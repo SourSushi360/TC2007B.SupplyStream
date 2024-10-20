@@ -74,20 +74,30 @@ To get a local copy up and running follow these steps:
 Once the application is running, you can use the following features:
 
 Add Items: Take a picture of an item to recognize it and save it to the database automatically.
+
 Barcode/QR Code Scanning: Use your device's camera to scan barcodes or QR codes for easy item entry.
+
 View Items: Browse through the list of saved items stored in the Firebase database.
 
-Contributing
+## Contributing
+
 Contributions are welcome! Please follow these steps:
 
 Fork the project.
+
 Create your feature branch (git checkout -b feature/AmazingFeature).
 Commit your changes (git commit -m 'Add some AmazingFeature').
+
 Push to the branch (git push origin feature/AmazingFeature).
+
 Open a Pull Request.
-License
+
+## License
+
 Distributed under the MIT License. See LICENSE for more information.
 
-Acknowledgments
+## Acknowledgments
+
 Expo for the framework.
+
 Firebase for backend services.
