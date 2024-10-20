@@ -28,13 +28,32 @@ This project is a mobile application designed to help users manage their invento
 
 - [Firebase](https://firebase.google.com/) - For authentication and database storage.
 - [React Native](https://reactnative.dev/) - For building the mobile application.
-- [TensorFlow.js](https://www.tensorflow.org/js) (or any AI library you are using) - For item recognition.
+- [clip-vit-base-patch32](https://huggingface.co/openai/clip-vit-base-patch32) clip-vit-base-patch32 - For item recognition.
 
 ## Installation
 
 To get a local copy up and running follow these steps:
 
 1. Clone the repo
+
    ```bash
    git clone https://github.com/yourusername/your-repo-name.git
+   ```
+
+   navigate to the project directory:
+
+   ```bash
+   cd your-repo-name
+   ```
+
+   Install Expo CLI: If you haven’t installed Expo CLI yet, you can do so globally using npm:
+
+   ```bash
+   npm install -g expo-cli
+   ```
+
+   Install project dependencies: Run the following command to install the necessary dependencies:
+
+   ```bash
+   npm install
    ```
